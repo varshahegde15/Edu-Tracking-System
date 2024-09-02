@@ -30,7 +30,7 @@ public class RatingController {
 		return responseBuilder.success(HttpStatus.OK, "Rating updated", ratingResponseDTO);
 	}
 
-	@GetMapping("/ratings/{student_id}")
+	@GetMapping("/students/{student_id}/ratings")
 	public ResponseEntity<ResponseStructure<List<RatingResponseDTO>>> findAllRatings(
 			@Valid @PathVariable String student_id) {
 		List<RatingResponseDTO> response = ratingService.findAllRatings(student_id);
