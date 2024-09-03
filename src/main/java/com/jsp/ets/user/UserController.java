@@ -29,28 +29,28 @@ public class UserController {
 	private UserService userService;
 	private CustomResponseBuilder responseBuilder;
 
-	@PostMapping("/admins")
+	@PostMapping("/admins/register")
 	public ResponseEntity<ResponseStructure<UserResponse>> saveAdmin(
 			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) {
 		UserResponse response = userService.saveUser(registrationRequestDTO, UserRole.ADMIN);
 		return responseBuilder.success(HttpStatus.CREATED, "Admin created", response);
 	}
 
-	@PostMapping("/hrs")
+	@PostMapping("/hrs/register")
 	public ResponseEntity<ResponseStructure<UserResponse>> saveHR(
 			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) {
 		UserResponse response = userService.saveUser(registrationRequestDTO, UserRole.HR);
 		return responseBuilder.success(HttpStatus.CREATED, "HR created", response);
 	}
 
-	@PostMapping("/trainers")
+	@PostMapping("/trainers/register")
 	public ResponseEntity<ResponseStructure<UserResponse>> saveTrainer(
 			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) {
 		UserResponse response = userService.saveUser(registrationRequestDTO, UserRole.TRAINER);
 		return responseBuilder.success(HttpStatus.CREATED, "Trainer created", response);
 	}
 
-	@PostMapping("/students")
+	@PostMapping("/students/register")
 	public ResponseEntity<ResponseStructure<UserResponse>> saveStudent(
 			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) {
 		UserResponse response = userService.saveUser(registrationRequestDTO, UserRole.STUDENT);
@@ -61,7 +61,7 @@ public class UserController {
 	public ResponseEntity<ResponseStructure<StudentResponseDTO>> updateStudent(
 			@RequestBody @Valid StudentRequestDTO studentRequestDTO, @PathVariable String student_id) {
 		StudentResponseDTO studentResponseDTO = (StudentResponseDTO) userService.updateUser(studentRequestDTO,
-				student_id, UserRole.STUDENT);
+				student_id);
 		return responseBuilder.success(HttpStatus.OK, "Student updated", studentResponseDTO);
 	}
 
@@ -76,7 +76,7 @@ public class UserController {
 	public ResponseEntity<ResponseStructure<TrainerResponseDTO>> updateTrainer(
 			@RequestBody @Valid TrainerRequestDTO trainerRequestDTO, @PathVariable String trainer_id) {
 		TrainerResponseDTO trainerResponseDTO = (TrainerResponseDTO) userService.updateUser(trainerRequestDTO,
-				trainer_id, UserRole.TRAINER);
+				trainer_id);
 		return responseBuilder.success(HttpStatus.OK, "Trainer updated", trainerResponseDTO);
 	}
 

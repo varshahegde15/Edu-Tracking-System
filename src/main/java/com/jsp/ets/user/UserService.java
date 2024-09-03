@@ -43,10 +43,10 @@ public class UserService {
         return userMapper.mapToUserResponse(user);
     }
 
-    public UserResponse updateUser(UserRequestDTO userRequestDTO, String userId, UserRole role) {
+    public UserResponse updateUser(UserRequestDTO userRequestDTO, String userId) {
         return userRepo.findById(userId)
             .map(user -> {
-                switch (role) {
+                switch (user.getRole()) {
                     case STUDENT: {
                         Student student = (Student) user;
                         StudentRequestDTO studentRequestDTO = (StudentRequestDTO) userRequestDTO;
@@ -62,7 +62,7 @@ public class UserService {
                         return userMapper.mapToTrainerResponse(trainer);
                     }
                     default:
-                        throw new IllegalArgumentException("Unexpected value: " + role);
+                        throw new IllegalArgumentException("Unexpected value: " + user.getRole());
                 }
             })
             .orElseThrow(() -> new UserNotFoundByIdException("User not found"));
