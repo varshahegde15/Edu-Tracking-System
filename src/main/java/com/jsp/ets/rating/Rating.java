@@ -37,8 +37,8 @@ public class Rating {
 	@Enumerated(EnumType.STRING)
 	private Subject subject;
 
-	@Column(name = "rating")
-	private int rating;
+	@Column(name = "ratings")
+	private int ratings;
 
 	@Column(name = "feedback")
 	private String feedback;
