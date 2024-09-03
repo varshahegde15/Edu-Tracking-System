@@ -11,7 +11,7 @@ public class RatingMapper {
 
 	public Rating mapToRatingEntity(RatingRequestDTO ratingRequestDTO, Rating rating) {
 		rating.setFeedback(ratingRequestDTO.getFeedback());
-		rating.setRating(ratingRequestDTO.getRating());
+		rating.setRatings(ratingRequestDTO.getRatings());
 
 		return rating;
 	}
@@ -21,7 +21,7 @@ public class RatingMapper {
 		RatingResponseDTO ratingResponseDTO = new RatingResponseDTO();
 
 		ratingResponseDTO.setFeedback(rating.getFeedback());
-		ratingResponseDTO.setRating(rating.getRating());
+		ratingResponseDTO.setRatings(rating.getRatings());
 		ratingResponseDTO.setRatingId(rating.getRatingId());
 		ratingResponseDTO.setSubject(rating.getSubject());
 
