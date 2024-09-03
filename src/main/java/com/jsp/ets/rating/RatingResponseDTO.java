@@ -11,7 +11,7 @@ public class RatingResponseDTO {
 
 	private String ratingId;
 	private Subject subject;
-	private int rating;
+	private int ratings;
 	private String feedback;
 
 }

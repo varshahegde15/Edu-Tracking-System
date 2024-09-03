@@ -15,7 +15,7 @@ public class RatingRequestDTO {
 
 	@Min(value = 1, message = "Rating must be at least 1")
 	@Max(value = 5, message = "Rating must be at most 5")
-	private int rating;
+	private int ratings;
 
 	@NotBlank(message = "Feedback must not be blank")
 	private String feedback;
