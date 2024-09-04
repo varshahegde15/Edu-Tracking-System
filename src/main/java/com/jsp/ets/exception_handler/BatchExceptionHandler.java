@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.jsp.ets.exception.BatchNotFoundByIdException;
-import com.jsp.ets.exception.RatingNotFoundByIdException;
 import com.jsp.ets.utility.CustomResponseBuilder;
 import com.jsp.ets.utility.ErrorStructure;
 
