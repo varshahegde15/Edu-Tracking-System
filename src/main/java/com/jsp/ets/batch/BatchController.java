@@ -29,24 +29,24 @@ public class BatchController {
 		return responseBuilder.success(HttpStatus.CREATED, "Batch created", response);
 	}
 
-	@PutMapping("/batches/{batchId}")
+	@PutMapping("/batches/{batch_id}")
 	public ResponseEntity<ResponseStructure<BatchResponseDTO>> updateBatch(
-			@RequestBody @Valid BatchRequestDTO batchRequestDTO, @PathVariable String batchId) {
-		BatchResponseDTO response = batchService.updateBatch(batchRequestDTO, batchId);
+			@RequestBody @Valid BatchRequestDTO batchRequestDTO, @PathVariable String batch_id) {
+		BatchResponseDTO response = batchService.updateBatch(batchRequestDTO, batch_id);
 		return responseBuilder.success(HttpStatus.OK, "Batch updated", response);
 	}
 
-	@PatchMapping("/batches/{batchId}")
+	@PatchMapping("/batches/{batch_id}")
 	public ResponseEntity<ResponseStructure<BatchResponseDTO>> updateBatchStatusToCancelled(
-			@Valid @PathVariable String batchId) {
-		BatchResponseDTO response = batchService.updateBatchStatus(batchId, BatchStatus.CANCELLED);
+			@Valid @PathVariable String batch_id) {
+		BatchResponseDTO response = batchService.updateBatchStatus(batch_id, BatchStatus.CANCELLED);
 		return responseBuilder.success(HttpStatus.OK, "Batch status updated to cancelled", response);
 	}
 
-	@PatchMapping("/batches/{batchId}/closed")
+	@PatchMapping("/batches/{batch_id}/closed")
 	public ResponseEntity<ResponseStructure<BatchResponseDTO>> updateBatchStatusToClossed(
-			@Valid @PathVariable String batchId) {
-		BatchResponseDTO response = batchService.updateBatchStatus(batchId, BatchStatus.CLOSED);
+			@Valid @PathVariable String batch_id) {
+		BatchResponseDTO response = batchService.updateBatchStatus(batch_id, BatchStatus.CLOSED);
 		return responseBuilder.success(HttpStatus.OK, "Batch status updated to clossed", response);
 	}
 

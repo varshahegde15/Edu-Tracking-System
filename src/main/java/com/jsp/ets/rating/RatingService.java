@@ -23,8 +23,8 @@ public class RatingService {
     private final RatingMapper ratingMapper;
     private final UserRepository userRepo;
 
-    public RatingResponseDTO updateRating(RatingRequestDTO ratingRequestDTO, String ratingId) {
-        return ratingRepo.findById(ratingId)
+    public RatingResponseDTO updateRating(RatingRequestDTO ratingRequestDTO, String rating_id) {
+        return ratingRepo.findById(rating_id)
                 .map(existingRating -> ratingMapper.mapToRatingEntity(ratingRequestDTO, existingRating))
                 .map(ratingRepo::save)
                 .map(ratingMapper::mapToRatingResponse)
@@ -33,8 +33,8 @@ public class RatingService {
 
     public List<RatingResponseDTO> findAllRatings(String studentId) {
         return userRepo.findById(studentId)
-                .filter(Student.class::isInstance)
-                .map(Student.class::cast)
+                .filter(user -> user instanceof Student)
+                .map(user -> (Student) user)
                 .map(Student::getRatings)
                 .map(ratings -> ratings.stream()
                         .map(ratingMapper::mapToRatingResponse)
