@@ -4,7 +4,7 @@ import com.jsp.ets.EduTrackingSystemApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = EduTrackingSystemApplication.class)
+@SpringBootTest(classes = {DemoApplicationTests.class})
 class DemoApplicationTests {
 
 	@Test
