@@ -2,6 +2,7 @@ package com.jsp.ets.user;
 
 import java.util.List;
 
+@Getter
 public enum Stack {
 
 	JAVA_FULL_STACK(List.of(Subject.CORE_JAVA, Subject.HIBERNATE, Subject.SQL, Subject.SPRING, Subject.SPRING_BOOT,
@@ -14,13 +15,4 @@ public enum Stack {
 	private Stack(List<Subject> subjects) {
 		this.subjects = subjects;
 	}
-
-	public List<Subject> getSubjects() {
-		return subjects;
-	}
-
-	public void setSubjects(List<Subject> subjects) {
-		this.subjects = subjects;
-	}
-
 }
