@@ -1,9 +1,6 @@
 package com.jsp.ets.user;
 
-import lombok.Getter;
-
 import java.util.List;
-
 
 public enum Stack {
 
@@ -20,6 +17,10 @@ public enum Stack {
 
 	public List<Subject> getSubjects() {
 		return subjects;
+	}
+
+	public void setSubjects(List<Subject> subjects) {
+		this.subjects = subjects;
 	}
 
 }

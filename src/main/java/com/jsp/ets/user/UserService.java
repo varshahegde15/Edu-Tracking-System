@@ -70,22 +70,24 @@ public class UserService {
 
     public StudentResponseDTO updateStudentStack(String stack, String studentId) {
         return userRepo.findById(studentId)
-                .filter(Student.class::isInstance)
-                .map(Student.class::cast)
-                .map(student -> {
-                    List<Subject> subjects = Optional.ofNullable(Stack.valueOf(stack))
-                            .map(Stack::getSubjects)
-                            .orElseThrow(() -> new InvalidStackException("Invalid stack"));
-                    subjects.forEach(subject -> {
-                        Rating rating = new Rating();
-                        rating.setStudent(student);
-                        rating.setSubject(subject);
-                        ratingRepo.save(rating);
-                    });
-                    student.setStack(Stack.valueOf(stack));
-                    return userRepo.save(student);
-                })
-                .map(userMapper::mapToStudentResponse)
-                .orElseThrow(() -> new UserNotFoundByIdException("Student not found by id"));
+            .filter(user -> user instanceof Student)
+            .map(user -> (Student) user)
+            .map(student -> {
+                List<Subject> subjects = Optional.ofNullable(Stack.valueOf(stack))
+                        .map(Stack::getSubjects)
+                        .orElseThrow(() -> new InvalidStackException("Invalid stack"));
+
+                subjects.forEach(subject -> {
+                    Rating rating = new Rating();
+                    rating.setStudent(student);
+                    rating.setSubject(subject);
+                    ratingRepo.save(rating);
+                });
+
+                student.setStack(Stack.valueOf(stack));
+                return userRepo.save(student);
+            })
+            .map(userMapper::mapToStudentResponse)
+            .orElseThrow(() -> new UserNotFoundByIdException("Student not found by id"));
     }
 }
