@@ -25,16 +25,16 @@ public class BatchService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Batch Request Data"));
     }
 
-    public BatchResponseDTO updateBatch(@Valid BatchRequestDTO batchRequestDTO, String batchId) {
-        return batchRepo.findById(batchId)
+    public BatchResponseDTO updateBatch(@Valid BatchRequestDTO batchRequestDTO, String batch_id) {
+        return batchRepo.findById(batch_id)
                 .map(existingBatch -> batchMapper.mapToBatchEntity(batchRequestDTO, existingBatch))
                 .map(batchRepo::save)
                 .map(batchMapper::mapToBatchResponse)
                 .orElseThrow(() -> new BatchNotFoundByIdException("Batch not found by id"));
     }
 
-    public BatchResponseDTO updateBatchStatus(@Valid String batchId, BatchStatus batchStatus) {
-        return batchRepo.findById(batchId)
+    public BatchResponseDTO updateBatchStatus(@Valid String batch_id, BatchStatus batchStatus) {
+        return batchRepo.findById(batch_id)
                 .map(existingBatch -> {
                     existingBatch.setBatchStatus(batchStatus);
                     return batchRepo.save(existingBatch);
