@@ -22,8 +22,4 @@ public enum Stack {
 		return subjects;
 	}
 
-	private void setSubjects(List<Subject> subjects) {
-		this.subjects = subjects;
-	}
-
 }
