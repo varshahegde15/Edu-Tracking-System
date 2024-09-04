@@ -57,26 +57,26 @@ public class UserController {
 		return responseBuilder.success(HttpStatus.CREATED, "Student created", response);
 	}
 
-	@PutMapping("/students/{student_id}")
+	@PutMapping("/students/{studentId}")
 	public ResponseEntity<ResponseStructure<StudentResponseDTO>> updateStudent(
-			@RequestBody @Valid StudentRequestDTO studentRequestDTO, @PathVariable String student_id) {
+			@RequestBody @Valid StudentRequestDTO studentRequestDTO, @PathVariable String studentId) {
 		StudentResponseDTO studentResponseDTO = (StudentResponseDTO) userService.updateUser(studentRequestDTO,
-				student_id);
+				studentId);
 		return responseBuilder.success(HttpStatus.OK, "Student updated", studentResponseDTO);
 	}
 
-	@PatchMapping("/students/{student_id}")
+	@PatchMapping("/students/{studentId}")
 	public ResponseEntity<ResponseStructure<StudentResponseDTO>> updateStudentStack(@RequestParam @Valid String stack,
-			@PathVariable String student_id) {
-		StudentResponseDTO studentResponseDTO = (StudentResponseDTO) userService.updateStudentStack(stack, student_id);
+			@PathVariable String studentId) {
+		StudentResponseDTO studentResponseDTO = userService.updateStudentStack(stack, studentId);
 		return responseBuilder.success(HttpStatus.OK, "Student stack updated", studentResponseDTO);
 	}
 
-	@PutMapping("/trainers/{trainer_id}")
+	@PutMapping("/trainers/{trainerId}")
 	public ResponseEntity<ResponseStructure<TrainerResponseDTO>> updateTrainer(
-			@RequestBody @Valid TrainerRequestDTO trainerRequestDTO, @PathVariable String trainer_id) {
+			@RequestBody @Valid TrainerRequestDTO trainerRequestDTO, @PathVariable String trainerId) {
 		TrainerResponseDTO trainerResponseDTO = (TrainerResponseDTO) userService.updateUser(trainerRequestDTO,
-				trainer_id);
+				trainerId);
 		return responseBuilder.success(HttpStatus.OK, "Trainer updated", trainerResponseDTO);
 	}
 
