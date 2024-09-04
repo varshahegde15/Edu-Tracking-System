@@ -1,4 +1,16 @@
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+            required: true
+
   application:
     name: Edu-Tracking-System
     
@@ -19,3 +31,4 @@ spring:
 # APPLICATION CONFIGURATION
 super_admin:
   email: ${SUPER-ADMIN_EMAIL}
+

@@ -23,17 +23,17 @@ public class RatingController {
 	private final RatingService ratingService;
 	private final CustomResponseBuilder responseBuilder;
 
-	@PutMapping("ratings/{rating_id}")
+	@PutMapping("ratings/{ratingId}")
 	public ResponseEntity<ResponseStructure<RatingResponseDTO>> updateRating(
-			@RequestBody @Valid RatingRequestDTO ratingRequestDTO, @PathVariable String rating_id) {
-		RatingResponseDTO ratingResponseDTO = ratingService.updateRating(ratingRequestDTO, rating_id);
+			@RequestBody @Valid RatingRequestDTO ratingRequestDTO, @PathVariable String ratingId) {
+		RatingResponseDTO ratingResponseDTO = ratingService.updateRating(ratingRequestDTO, ratingId);
 		return responseBuilder.success(HttpStatus.OK, "Rating updated", ratingResponseDTO);
 	}
 
-	@GetMapping("/students/{student_id}/ratings")
+	@GetMapping("/students/{studentId}/ratings")
 	public ResponseEntity<ResponseStructure<List<RatingResponseDTO>>> findAllRatings(
-			@Valid @PathVariable String student_id) {
-		List<RatingResponseDTO> response = ratingService.findAllRatings(student_id);
+			@Valid @PathVariable String studentId) {
+		List<RatingResponseDTO> response = ratingService.findAllRatings(studentId);
 		return responseBuilder.success(HttpStatus.FOUND, "Ratings Found", response);
 	}
 }
