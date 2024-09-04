@@ -68,7 +68,7 @@ public class UserController {
 	@PatchMapping("/students/{studentId}")
 	public ResponseEntity<ResponseStructure<StudentResponseDTO>> updateStudentStack(@RequestParam @Valid String stack,
 			@PathVariable String studentId) {
-		StudentResponseDTO studentResponseDTO = (StudentResponseDTO) userService.updateStudentStack(stack, studentId);
+		StudentResponseDTO studentResponseDTO = userService.updateStudentStack(stack, studentId);
 		return responseBuilder.success(HttpStatus.OK, "Student stack updated", studentResponseDTO);
 	}
 
