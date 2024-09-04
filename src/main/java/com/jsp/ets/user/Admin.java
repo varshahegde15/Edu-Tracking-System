@@ -1,6 +1,4 @@
-package com.jsp.ets.admin;
-
-import com.jsp.ets.user.User;
+package com.jsp.ets.user;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
