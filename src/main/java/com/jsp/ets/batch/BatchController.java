@@ -38,8 +38,8 @@ public class BatchController {
 
 	@PatchMapping("/batches/{batchId}")
 	public ResponseEntity<ResponseStructure<BatchResponseDTO>> updateBatchStatusToCancelled(
-			@Valid @PathVariable String batch_id) {
-		BatchResponseDTO response = batchService.updateBatchStatus(batch_id, BatchStatus.CANCELLED);
+			@Valid @PathVariable String batchId) {
+		BatchResponseDTO response = batchService.updateBatchStatus(batchId, BatchStatus.CANCELLED);
 		return responseBuilder.success(HttpStatus.OK, "Batch status updated to cancelled", response);
 	}
 
