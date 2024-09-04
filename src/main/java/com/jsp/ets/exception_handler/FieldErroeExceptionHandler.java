@@ -31,7 +31,7 @@ public class FieldErroeExceptionHandler extends ResponseEntityExceptionHandler {
 
 		List<ObjectError> objectErrors = ex.getAllErrors();
 
-		List<CustomFieldError> errors = new ArrayList<CustomFieldError>();
+		List<CustomFieldError> errors = new ArrayList<>();
 
 		for (ObjectError error : objectErrors) {
 			FieldError fieldError = (FieldError) error;

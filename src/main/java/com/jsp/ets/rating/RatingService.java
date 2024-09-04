@@ -33,8 +33,8 @@ public class RatingService {
 
     public List<RatingResponseDTO> findAllRatings(String studentId) {
         return userRepo.findById(studentId)
-                .filter(user -> user instanceof Student)
-                .map(user -> (Student) user)
+                .filter(Student.class::isInstance)
+                .map(Student.class::cast)
                 .map(Student::getRatings)
                 .map(ratings -> ratings.stream()
                         .map(ratingMapper::mapToRatingResponse)

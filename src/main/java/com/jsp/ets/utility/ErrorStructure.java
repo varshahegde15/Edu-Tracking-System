@@ -11,7 +11,7 @@ public class ErrorStructure<T> {
 	private T rootCause;
 
 	public static <T> ErrorStructure<T> create(int status, String message, T rootCause) {
-		ErrorStructure<T> error = new ErrorStructure<T>();
+		ErrorStructure<T> error = new ErrorStructure<>();
 		error.setStatus(status);
 		error.setMessage(message);
 		error.setRootCause(rootCause);
