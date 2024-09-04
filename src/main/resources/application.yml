@@ -11,6 +11,10 @@ spring:
             enable: true
             required: true
 
+  cache:
+    jcache:
+      config: "classpath:ehcache.xml"
+
   application:
     name: Edu-Tracking-System
     
