@@ -24,6 +24,8 @@ import com.jsp.ets.user.response_dtos.UserResponse;
 
 import lombok.AllArgsConstructor;
 
+import javax.cache.annotation.CachePut;
+
 @Service
 @AllArgsConstructor
 public class UserService {
@@ -34,7 +36,7 @@ public class UserService {
     private final MailSender mailSender;
     private final Random random;
 
-    public UserResponse saveUser(RegistrationRequestDTO registrationRequestDTO, UserRole role) {
+    public UserResponse registerUser(RegistrationRequestDTO registrationRequestDTO, UserRole role) {
         User user = switch (role) {
             case ADMIN -> new Admin();
             case HR -> new HR();
