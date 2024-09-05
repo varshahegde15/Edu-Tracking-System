@@ -18,7 +18,7 @@
 
     <cache alias="non_verified_users">
         <key-type>java.lang.String</key-type>
-        <value-type>com.jsp.ets.user.response_dtos.UserResponse</value-type>
+        <value-type>com.jsp.ets.user.User</value-type>
         <expiry>
             <ttl unit="minutes">10</ttl>
         </expiry>

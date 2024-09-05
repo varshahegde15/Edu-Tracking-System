@@ -8,6 +8,7 @@ import java.util.Random;
 import com.jsp.ets.utility.MailSender;
 import com.jsp.ets.utility.MessageModel;
 import jakarta.mail.MessagingException;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 
 import com.jsp.ets.exception.InvalidStackException;
@@ -24,8 +25,6 @@ import com.jsp.ets.user.response_dtos.UserResponse;
 
 import lombok.AllArgsConstructor;
 
-import javax.cache.annotation.CachePut;
-
 @Service
 @AllArgsConstructor
 public class UserService {
@@ -36,6 +35,7 @@ public class UserService {
     private final MailSender mailSender;
     private final Random random;
 
+    @CachePut(cacheNames = "non_verified_users", key = "#registrationRequestDTO.email")
     public UserResponse registerUser(RegistrationRequestDTO registrationRequestDTO, UserRole role) {
         User user = switch (role) {
             case ADMIN -> new Admin();
