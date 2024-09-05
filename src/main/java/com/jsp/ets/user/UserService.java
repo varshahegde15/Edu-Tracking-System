@@ -1,8 +1,12 @@
 package com.jsp.ets.user;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import com.jsp.ets.utility.MailSender;
+import com.jsp.ets.utility.MessageModel;
+import jakarta.mail.MessagingException;
 import org.springframework.stereotype.Service;
 
 import com.jsp.ets.exception.InvalidStackException;
@@ -26,6 +30,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final UserRepository userRepo;
     private final RatingRepository ratingRepo;
+    private final MailSender mailSender;
 
     public UserResponse saveUser(RegistrationRequestDTO registrationRequestDTO, UserRole role) {
         User user = switch (role) {
@@ -87,5 +92,71 @@ public class UserService {
                 })
                 .map(userMapper::mapToStudentResponse)
                 .orElseThrow(() -> new UserNotFoundByIdException("Student not found by id"));
+    }
+
+    private void sendOtpToMailId(String email, int otp) throws MessagingException {
+        String text = "<!DOCTYPE html>\n" +
+                "<html lang=\"en\">\n" +
+                "<head>\n" +
+                "    <meta charset=\"UTF-8\">\n" +
+                "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+                "    <title>OTP Notification</title>\n" +
+                "    <style>\n" +
+                "        body {\n" +
+                "            font-family: Arial, sans-serif;\n" +
+                "            background-color: #f9f9f9;\n" +
+                "            display: flex;\n" +
+                "            justify-content: center;\n" +
+                "            align-items: center;\n" +
+                "            height: 100vh;\n" +
+                "            margin: 0;\n" +
+                "        }\n" +
+                "\n" +
+                "        .container {\n" +
+                "            background-color: white;\n" +
+                "            padding: 20px;\n" +
+                "            border-radius: 10px;\n" +
+                "            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);\n" +
+                "            max-width: 400px;\n" +
+                "            text-align: center;\n" +
+                "        }\n" +
+                "\n" +
+                "        h2 {\n" +
+                "            font-size: 24px;\n" +
+                "            color: #333;\n" +
+                "        }\n" +
+                "\n" +
+                "        p {\n" +
+                "            font-size: 16px;\n" +
+                "            color: #555;\n" +
+                "            margin-bottom: 20px;\n" +
+                "        }\n" +
+                "\n" +
+                "        .otp {\n" +
+                "            font-weight: bold;\n" +
+                "            font-size: 18px;\n" +
+                "            color: #d9534f;\n" +
+                "        }\n" +
+                "    </style>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                "\n" +
+                "    <div class=\"container\">\n" +
+                "        <h2>OTP Verification</h2>\n" +
+                "        <p>Dear User,</p>\n" +
+                "        <p>The OTP to verify your EDU-Tracking-System account is <span class=\"otp\">"+otp+"</span>. It will be valid for the next 5 minutes only.</p>\n" +
+                "        <p>Please enter this OTP to complete your verification.</p>\n" +
+                "    </div>\n" +
+                "\n" +
+                "</body>\n" +
+                "</html>\n";
+
+        MessageModel messageModel = new MessageModel();
+        messageModel.setTo(email);
+        messageModel.setSubject("Verify your email for EDU-Tracking");
+        messageModel.setSendDate(new Date());
+        messageModel.setText(text);
+
+        mailSender.sendMail(messageModel);
     }
 }
