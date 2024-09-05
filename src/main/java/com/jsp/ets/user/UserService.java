@@ -3,6 +3,7 @@ package com.jsp.ets.user;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import com.jsp.ets.utility.MailSender;
 import com.jsp.ets.utility.MessageModel;
@@ -31,6 +32,7 @@ public class UserService {
     private final UserRepository userRepo;
     private final RatingRepository ratingRepo;
     private final MailSender mailSender;
+    private final Random random;
 
     public UserResponse saveUser(RegistrationRequestDTO registrationRequestDTO, UserRole role) {
         User user = switch (role) {
