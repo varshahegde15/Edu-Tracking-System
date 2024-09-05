@@ -30,31 +30,31 @@ public class UserController {
 	private CustomResponseBuilder responseBuilder;
 
 	@PostMapping("/admins/register")
-	public ResponseEntity<ResponseStructure<UserResponse>> saveAdmin(
+	public ResponseEntity<ResponseStructure<UserResponse>> registerAdmin(
 			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) {
 		UserResponse response = userService.registerUser(registrationRequestDTO, UserRole.ADMIN);
-		return responseBuilder.success(HttpStatus.CREATED, "Admin created", response);
+		return responseBuilder.success(HttpStatus.ACCEPTED, "Accepted the details, verify your email by submitting the otp", response);
 	}
 
 	@PostMapping("/hrs/register")
-	public ResponseEntity<ResponseStructure<UserResponse>> saveHR(
+	public ResponseEntity<ResponseStructure<UserResponse>> registerHR(
 			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) {
 		UserResponse response = userService.registerUser(registrationRequestDTO, UserRole.HR);
-		return responseBuilder.success(HttpStatus.CREATED, "HR created", response);
+		return responseBuilder.success(HttpStatus.ACCEPTED, "Accepted the details, verify your email by submitting the otp", response);
 	}
 
 	@PostMapping("/trainers/register")
-	public ResponseEntity<ResponseStructure<UserResponse>> saveTrainer(
+	public ResponseEntity<ResponseStructure<UserResponse>> registerTrainer(
 			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) {
 		UserResponse response = userService.registerUser(registrationRequestDTO, UserRole.TRAINER);
-		return responseBuilder.success(HttpStatus.CREATED, "Trainer created", response);
+		return responseBuilder.success(HttpStatus.ACCEPTED, "Accepted the details, verify your email by submitting the otp", response);
 	}
 
 	@PostMapping("/students/register")
-	public ResponseEntity<ResponseStructure<UserResponse>> saveStudent(
+	public ResponseEntity<ResponseStructure<UserResponse>> registerStudent(
 			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) {
 		UserResponse response = userService.registerUser(registrationRequestDTO, UserRole.STUDENT);
-		return responseBuilder.success(HttpStatus.CREATED, "Student created", response);
+		return responseBuilder.success(HttpStatus.ACCEPTED, "Accepted the details, verify your email by submitting the otp", response);
 	}
 
 	@PutMapping("/students/{studentId}")

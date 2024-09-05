@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import com.jsp.ets.utility.CacheHelper;
 import com.jsp.ets.utility.MailSender;
 import com.jsp.ets.utility.MessageModel;
 import jakarta.mail.MessagingException;
@@ -34,8 +35,8 @@ public class UserService {
     private final RatingRepository ratingRepo;
     private final MailSender mailSender;
     private final Random random;
+    private final CacheHelper cacheHelper;
 
-    @CachePut(cacheNames = "non_verified_users", key = "#registrationRequestDTO.email")
     public UserResponse registerUser(RegistrationRequestDTO registrationRequestDTO, UserRole role) {
         User user = switch (role) {
             case ADMIN -> new Admin();
@@ -48,6 +49,8 @@ public class UserService {
         user = userMapper.mapToUserEntity(registrationRequestDTO, user);
         user.setRole(role);
         Integer otp = random.nextInt(100000,999999);
+       cacheHelper.userCache(user);
+       cacheHelper.otpCache(otp);
 
         return userMapper.mapToUserResponse(user);
     }
