@@ -1,5 +1,6 @@
 package com.jsp.ets.user;
 
+import jakarta.mail.MessagingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -31,31 +32,38 @@ public class UserController {
 
 	@PostMapping("/admins/register")
 	public ResponseEntity<ResponseStructure<UserResponse>> registerAdmin(
-			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) {
+			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) throws MessagingException {
 		UserResponse response = userService.registerUser(registrationRequestDTO, UserRole.ADMIN);
 		return responseBuilder.success(HttpStatus.ACCEPTED, "Accepted the details, verify your email by submitting the otp", response);
 	}
 
 	@PostMapping("/hrs/register")
 	public ResponseEntity<ResponseStructure<UserResponse>> registerHR(
-			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) {
+			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) throws MessagingException {
 		UserResponse response = userService.registerUser(registrationRequestDTO, UserRole.HR);
 		return responseBuilder.success(HttpStatus.ACCEPTED, "Accepted the details, verify your email by submitting the otp", response);
 	}
 
 	@PostMapping("/trainers/register")
 	public ResponseEntity<ResponseStructure<UserResponse>> registerTrainer(
-			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) {
+			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) throws MessagingException {
 		UserResponse response = userService.registerUser(registrationRequestDTO, UserRole.TRAINER);
 		return responseBuilder.success(HttpStatus.ACCEPTED, "Accepted the details, verify your email by submitting the otp", response);
 	}
 
 	@PostMapping("/students/register")
 	public ResponseEntity<ResponseStructure<UserResponse>> registerStudent(
-			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) {
+			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) throws MessagingException {
 		UserResponse response = userService.registerUser(registrationRequestDTO, UserRole.STUDENT);
 		return responseBuilder.success(HttpStatus.ACCEPTED, "Accepted the details, verify your email by submitting the otp", response);
 	}
+
+//	@PostMapping("/users/verify")
+//	public ResponseEntity<ResponseStructure<String>> verifyUser(
+//			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) {
+//		UserResponse response = userService.registerUser(registrationRequestDTO, UserRole.STUDENT);
+//		return responseBuilder.success(HttpStatus.ACCEPTED, "Accepted the details, verify your email by submitting the otp", response);
+//	}
 
 	@PutMapping("/students/{studentId}")
 	public ResponseEntity<ResponseStructure<StudentResponseDTO>> updateStudent(

@@ -6,10 +6,10 @@ import java.util.Optional;
 import java.util.Random;
 
 import com.jsp.ets.utility.CacheHelper;
-import com.jsp.ets.utility.MailSender;
+import com.jsp.ets.utility.MailSenderService;
 import com.jsp.ets.utility.MessageModel;
 import jakarta.mail.MessagingException;
-import org.springframework.cache.annotation.CachePut;
+import org.eclipse.angus.mail.handlers.message_rfc822;
 import org.springframework.stereotype.Service;
 
 import com.jsp.ets.exception.InvalidStackException;
@@ -33,11 +33,11 @@ public class UserService {
     private final UserMapper userMapper;
     private final UserRepository userRepo;
     private final RatingRepository ratingRepo;
-    private final MailSender mailSender;
+    private final MailSenderService mailSender;
     private final Random random;
     private final CacheHelper cacheHelper;
 
-    public UserResponse registerUser(RegistrationRequestDTO registrationRequestDTO, UserRole role) {
+    public UserResponse registerUser(RegistrationRequestDTO registrationRequestDTO, UserRole role) throws MessagingException {
         User user = switch (role) {
             case ADMIN -> new Admin();
             case HR -> new HR();
@@ -51,7 +51,7 @@ public class UserService {
         Integer otp = random.nextInt(100000,999999);
        cacheHelper.userCache(user);
        cacheHelper.otpCache(otp);
-
+       sendOtpToMailId(user.getEmail(),otp);
         return userMapper.mapToUserResponse(user);
     }
 
