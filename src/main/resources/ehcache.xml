@@ -29,16 +29,4 @@
     </cache>
 
 
-    <cache alias="batch_cache">
-        <key-type>java.lang.String</key-type>
-        <value-type>com.jsp.ets.batch.Batch</value-type>
-        <expiry>
-            <ttl unit="minutes">10</ttl>
-        </expiry>
-        <resources>
-            <heap unit="entries">1000</heap>
-            <offheap unit="MB">30</offheap>
-        </resources>
-    </cache>
-
 </config>

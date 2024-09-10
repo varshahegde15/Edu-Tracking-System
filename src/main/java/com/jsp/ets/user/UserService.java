@@ -171,12 +171,12 @@ public class UserService {
     public UserResponse verifyUser(@Valid OtpRequestDto otpRequestDto) {
         Integer cachedOtp = cacheHelper.getCachedOtp(otpRequestDto.getEmail());
 
-        if (cachedOtp == null || !cachedOtp.equals(otpRequestDto.getOtp())) {
+        if (cachedOtp == 0 || !cachedOtp.equals(otpRequestDto.getOtp())) {
             throw new InvalidOtpException("Invalid Otp entered");
         }
 
         User cachedUser = cacheHelper.getRegisteringUser(otpRequestDto.getEmail());
-        if (cachedUser == null)
+        if (!cachedUser.getEmail().equals(otpRequestDto.getEmail()))
             throw new RegistrationSessionExpiredException("Registration session is expired");
 
         User user = userRepo.save(cachedUser);

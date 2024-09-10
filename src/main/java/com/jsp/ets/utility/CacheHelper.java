@@ -24,21 +24,12 @@ public class CacheHelper {
 
     @Cacheable(cacheNames = "otps", key = "#email")
     public Integer getCachedOtp(String email) {
-        System.out.println("Returning new otp 0");
         return 0;
     }
 
     @Cacheable(cacheNames = "non_verified_users", key = "#email")
     public User getRegisteringUser(String email) {
-        System.out.println("Returning new user");
         return new User();
     }
 
-    @CachePut(cacheNames ="batch_cache", key = "#batch.title")
-    public Batch batchCache(Batch batch){
-        return batch;
-    }
-
-    @CachePut(cacheNames ="batch_cache", key = "#title")
-    public Batch getBatchCache(String title){return null;}
 }
