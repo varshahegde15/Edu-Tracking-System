@@ -5,11 +5,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import com.jsp.ets.exception.InvalidOtpException;
+import com.jsp.ets.exception.RegistrationSessionExpiredException;
+import com.jsp.ets.user.request_dtos.*;
 import com.jsp.ets.utility.CacheHelper;
 import com.jsp.ets.utility.MailSenderService;
 import com.jsp.ets.utility.MessageModel;
 import jakarta.mail.MessagingException;
-import org.eclipse.angus.mail.handlers.message_rfc822;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import com.jsp.ets.exception.InvalidStackException;
@@ -17,10 +20,6 @@ import com.jsp.ets.exception.UserNotFoundByIdException;
 import com.jsp.ets.mapping.UserMapper;
 import com.jsp.ets.rating.Rating;
 import com.jsp.ets.rating.RatingRepository;
-import com.jsp.ets.user.request_dtos.RegistrationRequestDTO;
-import com.jsp.ets.user.request_dtos.StudentRequestDTO;
-import com.jsp.ets.user.request_dtos.TrainerRequestDTO;
-import com.jsp.ets.user.request_dtos.UserRequestDTO;
 import com.jsp.ets.user.response_dtos.StudentResponseDTO;
 import com.jsp.ets.user.response_dtos.UserResponse;
 
@@ -48,36 +47,38 @@ public class UserService {
 
         user = userMapper.mapToUserEntity(registrationRequestDTO, user);
         user.setRole(role);
-        Integer otp = random.nextInt(100000,999999);
-       cacheHelper.userCache(user);
-       cacheHelper.otpCache(otp);
-       sendOtpToMailId(user.getEmail(),otp);
+        Integer otp = random.nextInt(100000, 999999);
+
+        user = cacheHelper.userCache(user);
+        otp = cacheHelper.otpCache(otp, user.getEmail());
+
+        sendOtpToMailId(user.getEmail(), otp);
         return userMapper.mapToUserResponse(user);
     }
 
     public UserResponse updateUser(UserRequestDTO userRequestDTO, String userId) {
         return userRepo.findById(userId)
-            .map(user -> {
-                switch (user.getRole()) {
-                    case STUDENT: {
-                        Student student = (Student) user;
-                        StudentRequestDTO studentRequestDTO = (StudentRequestDTO) userRequestDTO;
-                        student = userMapper.mapToStudentEntity(studentRequestDTO, student);
-                        student = userRepo.save(student);
-                        return userMapper.mapToStudentResponse(student);
+                .map(user -> {
+                    switch (user.getRole()) {
+                        case STUDENT: {
+                            Student student = (Student) user;
+                            StudentRequestDTO studentRequestDTO = (StudentRequestDTO) userRequestDTO;
+                            student = userMapper.mapToStudentEntity(studentRequestDTO, student);
+                            student = userRepo.save(student);
+                            return userMapper.mapToStudentResponse(student);
+                        }
+                        case TRAINER: {
+                            Trainer trainer = (Trainer) user;
+                            TrainerRequestDTO trainerRequestDTO = (TrainerRequestDTO) userRequestDTO;
+                            trainer = userMapper.mapToTrainerEntity(trainerRequestDTO, trainer);
+                            trainer = userRepo.save(trainer);
+                            return userMapper.mapToTrainerResponse(trainer);
+                        }
+                        default:
+                            throw new IllegalArgumentException("Unexpected value: " + user.getRole());
                     }
-                    case TRAINER: {
-                        Trainer trainer = (Trainer) user;
-                        TrainerRequestDTO trainerRequestDTO = (TrainerRequestDTO) userRequestDTO;
-                        trainer = userMapper.mapToTrainerEntity(trainerRequestDTO, trainer);
-                        trainer = userRepo.save(trainer);
-                        return userMapper.mapToTrainerResponse(trainer);
-                    }
-                    default:
-                        throw new IllegalArgumentException("Unexpected value: " + user.getRole());
-                }
-            })
-            .orElseThrow(() -> new UserNotFoundByIdException("User not found"));
+                })
+                .orElseThrow(() -> new UserNotFoundByIdException("User not found"));
     }
 
     public StudentResponseDTO updateStudentStack(String stack, String studentId) {
@@ -151,7 +152,7 @@ public class UserService {
                 "    <div class=\"container\">\n" +
                 "        <h2>OTP Verification</h2>\n" +
                 "        <p>Dear User,</p>\n" +
-                "        <p>The OTP to verify your EDU-Tracking-System account is <span class=\"otp\">"+otp+"</span>. It will be valid for the next 5 minutes only.</p>\n" +
+                "        <p>The OTP to verify your EDU-Tracking-System account is <span class=\"otp\">" + otp + "</span>. It will be valid for the next 5 minutes only.</p>\n" +
                 "        <p>Please enter this OTP to complete your verification.</p>\n" +
                 "    </div>\n" +
                 "\n" +
@@ -165,5 +166,20 @@ public class UserService {
         messageModel.setText(text);
 
         mailSender.sendMail(messageModel);
+    }
+
+    public UserResponse verifyUser(@Valid OtpRequestDto otpRequestDto) {
+        Integer cachedOtp = cacheHelper.getCachedOtp(otpRequestDto.getEmail());
+
+        if (cachedOtp == null || !cachedOtp.equals(otpRequestDto.getOtp())) {
+            throw new InvalidOtpException("Invalid Otp entered");
+        }
+
+        User cachedUser = cacheHelper.getRegisteringUser(otpRequestDto.getEmail());
+        if (cachedUser == null)
+            throw new RegistrationSessionExpiredException("Registration session is expired");
+
+        User user = userRepo.save(cachedUser);
+        return userMapper.mapToUserResponse(user);
     }
 }

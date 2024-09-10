@@ -2,6 +2,7 @@ package com.jsp.ets.batch;
 
 import java.util.Optional;
 
+import com.jsp.ets.utility.CacheHelper;
 import org.springframework.stereotype.Service;
 
 import com.jsp.ets.exception.BatchNotFoundByIdException;
@@ -16,13 +17,19 @@ public class BatchService {
 
     private final BatchRepository batchRepo;
     private final BatchMapper batchMapper;
+    private final CacheHelper cacheHelper;
 
     public BatchResponseDTO saveBatch(BatchRequestDTO batchRequestDTO) {
-        return Optional.ofNullable(batchRequestDTO)
-                .map(dto -> batchMapper.mapToBatchEntity(dto, new Batch()))
-                .map(batchRepo::save)
-                .map(batchMapper::mapToBatchResponse)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid Batch Request Data"));
+//        return Optional.ofNullable(batchRequestDTO)
+//                .map(dto -> batchMapper.mapToBatchEntity(dto, new Batch()))
+//                .map(batchRepo::save)
+//                .map(batchMapper::mapToBatchResponse)
+//                .orElseThrow(() -> new IllegalArgumentException("Invalid Batch Request Data"));
+        Batch batch = batchMapper.mapToBatchEntity(batchRequestDTO,new Batch());
+        Batch cbatch = cacheHelper.batchCache(batch);
+        Batch dbatch = cacheHelper.getBatchCache(cbatch.getTitle());
+        System.out.println(dbatch.getTitle());
+        return batchMapper.mapToBatchResponse(batch);
     }
 
     public BatchResponseDTO updateBatch(@Valid BatchRequestDTO batchRequestDTO, String batchId) {

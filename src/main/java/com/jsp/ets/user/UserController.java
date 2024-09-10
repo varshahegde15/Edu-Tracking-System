@@ -1,5 +1,6 @@
 package com.jsp.ets.user;
 
+import com.jsp.ets.user.request_dtos.OtpRequestDto;
 import jakarta.mail.MessagingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,12 +59,12 @@ public class UserController {
 		return responseBuilder.success(HttpStatus.ACCEPTED, "Accepted the details, verify your email by submitting the otp", response);
 	}
 
-//	@PostMapping("/users/verify")
-//	public ResponseEntity<ResponseStructure<String>> verifyUser(
-//			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) {
-//		UserResponse response = userService.registerUser(registrationRequestDTO, UserRole.STUDENT);
-//		return responseBuilder.success(HttpStatus.ACCEPTED, "Accepted the details, verify your email by submitting the otp", response);
-//	}
+	@PostMapping("/users/verify")
+	public ResponseEntity<ResponseStructure<UserResponse>> verifyUser(
+			@RequestBody @Valid OtpRequestDto otpRequestDto) {
+		UserResponse response = userService.verifyUser(otpRequestDto);
+		return responseBuilder.success(HttpStatus.OK, "Successfully registered the user", response);
+	}
 
 	@PutMapping("/students/{studentId}")
 	public ResponseEntity<ResponseStructure<StudentResponseDTO>> updateStudent(

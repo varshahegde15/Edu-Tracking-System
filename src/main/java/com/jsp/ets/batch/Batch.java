@@ -1,5 +1,6 @@
 package com.jsp.ets.batch;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -29,7 +30,7 @@ import lombok.Setter;
 @Table(name = "batches")
 @Inheritance(strategy = InheritanceType.JOINED)
 @EntityListeners(AuditingEntityListener.class)
-public class Batch {
+public class Batch implements Serializable {
 
 	@Id
 	@GenerateSequenceId
