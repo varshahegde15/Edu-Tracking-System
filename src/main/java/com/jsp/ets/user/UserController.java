@@ -47,7 +47,7 @@ public class UserController {
 					@ApiResponse(responseCode = "400", description = "Bad Request, invalid inputs", content = @Content(schema = @Schema(anyOf = ErrorStructure.class))),
 					@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(anyOf = RuntimeException.class)))
 			})
-	@PostMapping("/admins/register")
+	@PostMapping("/register/admins")
 	public ResponseEntity<ResponseStructure<UserResponse>> registerAdmin(
 			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) throws MessagingException {
 		UserResponse response = userService.registerUser(registrationRequestDTO, UserRole.ADMIN);
@@ -65,7 +65,7 @@ public class UserController {
 					@ApiResponse(responseCode = "400", description = "Bad Request, invalid inputs", content = @Content(schema = @Schema(anyOf = ErrorStructure.class))),
 					@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(anyOf = RuntimeException.class)))
 			})
-	@PostMapping("/hrs/register")
+	@PostMapping("/register/hrs")
 	public ResponseEntity<ResponseStructure<UserResponse>> registerHR(
 			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) throws MessagingException {
 		UserResponse response = userService.registerUser(registrationRequestDTO, UserRole.HR);
@@ -83,7 +83,7 @@ public class UserController {
 					@ApiResponse(responseCode = "400", description = "Bad Request, invalid inputs", content = @Content(schema = @Schema(anyOf = ErrorStructure.class))),
 					@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(anyOf = RuntimeException.class)))
 			})
-	@PostMapping("/trainers/register")
+	@PostMapping("/register/trainers")
 	public ResponseEntity<ResponseStructure<UserResponse>> registerTrainer(
 			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) throws MessagingException {
 		UserResponse response = userService.registerUser(registrationRequestDTO, UserRole.TRAINER);
@@ -101,7 +101,7 @@ public class UserController {
 					@ApiResponse(responseCode = "400", description = "Bad Request, invalid inputs", content = @Content(schema = @Schema(anyOf = ErrorStructure.class))),
 					@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(anyOf = RuntimeException.class)))
 			})
-	@PostMapping("/students/register")
+	@PostMapping("/register/students")
 	public ResponseEntity<ResponseStructure<UserResponse>> registerStudent(
 			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) throws MessagingException {
 		UserResponse response = userService.registerUser(registrationRequestDTO, UserRole.STUDENT);
