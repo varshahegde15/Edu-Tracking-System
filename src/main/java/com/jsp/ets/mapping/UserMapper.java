@@ -1,5 +1,7 @@
 package com.jsp.ets.mapping;
 
+import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.jsp.ets.user.Student;
@@ -13,12 +15,15 @@ import com.jsp.ets.user.response_dtos.TrainerResponseDTO;
 import com.jsp.ets.user.response_dtos.UserResponse;
 
 @Component
+@AllArgsConstructor
 public class UserMapper {
+
+	private final PasswordEncoder passwordEncoder;
 
 	public User mapToUserEntity(RegistrationRequestDTO registrationRequestDTO, User user) {
 		user.setUsername(registrationRequestDTO.getUsername());
 		user.setEmail(registrationRequestDTO.getEmail());
-		user.setPassword(registrationRequestDTO.getPassword());
+		user.setPassword(passwordEncoder.encode(registrationRequestDTO.getPassword()));
 		return user;
 	}
 
