@@ -1,6 +1,6 @@
 package com.jsp.ets.user;
 
-import com.jsp.ets.user.request_dtos.OtpRequestDto;
+import com.jsp.ets.user.request_dtos.*;
 import com.jsp.ets.utility.ErrorStructure;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,9 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jsp.ets.user.request_dtos.RegistrationRequestDTO;
-import com.jsp.ets.user.request_dtos.StudentRequestDTO;
-import com.jsp.ets.user.request_dtos.TrainerRequestDTO;
 import com.jsp.ets.user.response_dtos.StudentResponseDTO;
 import com.jsp.ets.user.response_dtos.TrainerResponseDTO;
 import com.jsp.ets.user.response_dtos.UserResponse;
@@ -151,8 +148,9 @@ public class UserController {
 		return responseBuilder.success(HttpStatus.OK, "Trainer updated", trainerResponseDTO);
 	}
 
-	public ResponseEntity<ResponseStructure<TrainerResponseDTO>> login(){
-
+	@PostMapping("/login")
+	public String login(@RequestBody @Valid LoginRequestDTO loginRequestDTO){
+		return userService.login(loginRequestDTO);
 	}
 
 }

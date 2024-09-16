@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.util.Base64;
 import java.util.Date;
 import java.util.Map;
 
@@ -21,7 +20,7 @@ public class JwtService {
     @Value("${my_app.jwt.access_expiry}")
     private long access_expiry;
 
-    public String jwt(String email, String userId, String role){
+    public String createJwt(String email, String userId, String role){
        return Jwts.builder()
                 .setClaims(Map.of("userId",userId,"email",email,"role",role))
                 .setIssuedAt(new Date(System.currentTimeMillis()))

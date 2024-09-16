@@ -4,15 +4,24 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import com.jsp.ets.exception.InvalidOtpException;
 import com.jsp.ets.exception.RegistrationSessionExpiredException;
+import com.jsp.ets.security.JwtService;
 import com.jsp.ets.user.request_dtos.*;
 import com.jsp.ets.utility.CacheHelper;
 import com.jsp.ets.utility.MailSenderService;
 import com.jsp.ets.utility.MessageModel;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.jsp.ets.exception.InvalidStackException;
@@ -35,6 +44,8 @@ public class UserService {
     private final MailSenderService mailSender;
     private final Random random;
     private final CacheHelper cacheHelper;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     public UserResponse registerUser(RegistrationRequestDTO registrationRequestDTO, UserRole role) throws MessagingException {
         User user = switch (role) {
@@ -181,5 +192,20 @@ public class UserService {
 
         User user = userRepo.save(cachedUser);
         return userMapper.mapToUserResponse(user);
+    }
+
+    public String login(@Valid LoginRequestDTO loginRequestDTO) {
+        System.out.println("logging in");
+        UsernamePasswordAuthenticationToken authenticationToken=new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(),loginRequestDTO.getPassword());
+        Authentication authentication=authenticationManager.authenticate(authenticationToken);
+        if (authentication.isAuthenticated()) {
+            return userRepo.findByEmail(loginRequestDTO.getEmail())
+                    .map(user -> {
+                        return jwtService.createJwt(user.getUserId(), user.getEmail(), user.getRole().name());
+                    })
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + loginRequestDTO.getEmail()));
+        } else {
+            throw new BadCredentialsException("Invalid email or password");
+        }
     }
 }
