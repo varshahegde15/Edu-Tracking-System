@@ -151,4 +151,8 @@ public class UserController {
 		return responseBuilder.success(HttpStatus.OK, "Trainer updated", trainerResponseDTO);
 	}
 
+	public ResponseEntity<ResponseStructure<TrainerResponseDTO>> login(){
+
+	}
+
 }
