@@ -1,5 +1,7 @@
 package com.jsp.ets.security;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -20,7 +22,7 @@ public class JwtService {
     @Value("${my_app.jwt.access_expiry}")
     private long access_expiry;
 
-    public String createJwt(String email, String userId, String role){
+    public String createJwt(String userId, String email,  String role){
        return Jwts.builder()
                 .setClaims(Map.of("userId",userId,"email",email,"role",role))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -31,5 +33,10 @@ public class JwtService {
 
     private Key getKey(){
        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+    }
+
+    public Claims parseJwt(String token) {
+        JwtParser parser = Jwts.parserBuilder().setSigningKey(getKey()).build();
+        return parser.parseClaimsJws(token).getBody();
     }
 }
