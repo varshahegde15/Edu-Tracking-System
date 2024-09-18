@@ -195,7 +195,6 @@ public class UserService {
     }
 
     public String login(@Valid LoginRequestDTO loginRequestDTO) {
-        System.out.println("logging in");
         UsernamePasswordAuthenticationToken authenticationToken=new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(),loginRequestDTO.getPassword());
         Authentication authentication=authenticationManager.authenticate(authenticationToken);
         if (authentication.isAuthenticated()) {

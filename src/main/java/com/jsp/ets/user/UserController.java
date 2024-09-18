@@ -1,5 +1,6 @@
 package com.jsp.ets.user;
 
+import com.jsp.ets.exception.InvalidStackException;
 import com.jsp.ets.user.request_dtos.*;
 import com.jsp.ets.utility.ErrorStructure;
 import io.swagger.v3.oas.annotations.Operation;
@@ -109,7 +110,7 @@ public class UserController {
 
 
 	@Operation(description = "The API endpoint is used to verify email and otp."
-			+ " And registers the user to the database after successful validation",
+			+ " And registers the user to the database after successful verification",
 			responses = {
 					@ApiResponse(responseCode = "200", description = "User registered Successfully"),
 					@ApiResponse(responseCode = "400", description = "Bad Request, invalid inputs", content = @Content(schema = @Schema(anyOf = ErrorStructure.class))),
@@ -125,6 +126,14 @@ public class UserController {
 
 
 
+	@Operation(description = "The API endpoint is used to update the details of an existing Student user based on a unique Identifier."
+			+ " The endpoint requires the path variable userId and the student details that are to be updated.",
+			responses = {
+					@ApiResponse(responseCode = "200", description = "Student updated"),
+					@ApiResponse(responseCode = "400", description = "Bad Request, invalid inputs", content = @Content(schema = @Schema(anyOf = ErrorStructure.class))),
+					@ApiResponse(responseCode = "404", description = "Student not found", content = @Content(schema = @Schema(anyOf = ErrorStructure.class))),
+					@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(anyOf = RuntimeException.class)))
+			})
 	@PutMapping("/students/{studentId}")
 	public ResponseEntity<ResponseStructure<StudentResponseDTO>> updateStudent(
 			@RequestBody @Valid StudentRequestDTO studentRequestDTO, @PathVariable String studentId) {
@@ -133,6 +142,40 @@ public class UserController {
 		return responseBuilder.success(HttpStatus.OK, "Student updated", studentResponseDTO);
 	}
 
+
+
+
+
+
+	@Operation(
+			summary = "Update Student Stack",
+			description = "The API endpoint is used to update the stack of an existing Student user based on a unique Identifier. "
+					+ "The endpoint requires the path variable userId and the new stack value. "
+					+ "Only the following stack values are allowed: JAVA_FULL_STACK, MERN_STACK, PYTHON_FULL_STACK. "
+					+ "If an invalid stack value is provided, an exception will be thrown.",
+			responses = {
+					@ApiResponse(
+							responseCode = "200",
+							description = "Student stack updated",
+							content = @Content(schema = @Schema(implementation = StudentResponseDTO.class))
+					),
+					@ApiResponse(
+							responseCode = "400",
+							description = "Invalid stack value provided",
+							content = @Content(schema = @Schema(implementation = InvalidStackException.class))
+					),
+					@ApiResponse(
+							responseCode = "404",
+							description = "Student not found",
+							content = @Content(schema = @Schema(implementation = ErrorStructure.class))
+					),
+					@ApiResponse(
+							responseCode = "500",
+							description = "Internal Server Error",
+							content = @Content(schema = @Schema(implementation = RuntimeException.class))
+					)
+			}
+	)
 	@PatchMapping("/students/{studentId}")
 	public ResponseEntity<ResponseStructure<StudentResponseDTO>> updateStudentStack(@RequestParam @Valid String stack,
 			@PathVariable String studentId) {
@@ -140,6 +183,18 @@ public class UserController {
 		return responseBuilder.success(HttpStatus.OK, "Student stack updated", studentResponseDTO);
 	}
 
+
+
+
+
+	@Operation(description = "The API endpoint is used to update the details of an existing Trainer user based on a unique Identifier."
+			+ " The endpoint requires the path variable userId and the updated trainer details.",
+			responses = {
+					@ApiResponse(responseCode = "200", description = "Trainer updated"),
+					@ApiResponse(responseCode = "400", description = "Bad Request, invalid inputs", content = @Content(schema = @Schema(anyOf = ErrorStructure.class))),
+					@ApiResponse(responseCode = "404", description = "Trainer not found", content = @Content(schema = @Schema(anyOf = ErrorStructure.class))),
+					@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(anyOf = RuntimeException.class)))
+			})
 	@PutMapping("/trainers/{trainerId}")
 	public ResponseEntity<ResponseStructure<TrainerResponseDTO>> updateTrainer(
 			@RequestBody @Valid TrainerRequestDTO trainerRequestDTO, @PathVariable String trainerId) {
@@ -148,6 +203,14 @@ public class UserController {
 		return responseBuilder.success(HttpStatus.OK, "Trainer updated", trainerResponseDTO);
 	}
 
+
+
+
+	@Operation(description = "The API endpoint is used to generate a jwt token if the user credentials are valid and send it back as the response to the client."
+			+ " And this token is required for all the private end points access.",
+			responses = {
+					@ApiResponse(responseCode = "200", description = "Jwt token"),
+			})
 	@PostMapping("/login")
 	public String login(@RequestBody @Valid LoginRequestDTO loginRequestDTO){
 		return userService.login(loginRequestDTO);
