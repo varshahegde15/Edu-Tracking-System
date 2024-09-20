@@ -31,7 +31,7 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
-@Tag(name = "User Controller", description = "APIs for managing User.")
+@Tag(name = "User Controller", description = "APIs for managing Users including registration, login, and updates.")
 public class UserController {
 
 	private UserService userService;
@@ -215,6 +215,12 @@ public class UserController {
 	@PostMapping("/login")
 	public ResponseEntity<ResponseStructure<UserResponse>>  login(@RequestBody @Valid LoginRequestDTO loginRequestDTO){
 		return userService.login(loginRequestDTO);
+	}
+
+
+	@PostMapping("/login/refresh")
+	public ResponseEntity<ResponseStructure<UserResponse>> refreshLogin(){
+		return userService.refreshLogin();
 	}
 
 }

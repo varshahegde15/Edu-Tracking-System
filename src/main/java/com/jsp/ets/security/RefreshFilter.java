@@ -22,21 +22,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-@AllArgsConstructor
-public class JwtFilter extends OncePerRequestFilter {
+public class RefreshFilter extends OncePerRequestFilter {
 
-        private final BaseJwtFilter baseJwtFilter;
+    private final BaseJwtFilter baseJwtFilter;
 
-    public JwtFilter(JwtService jwtService) {
-            this.baseJwtFilter = new BaseJwtFilter(jwtService) {
-            };
-        }
+    public RefreshFilter(JwtService jwtService) {
+        this.baseJwtFilter = new BaseJwtFilter(jwtService) {};
+    }
 
-        @Override
-        protected void doFilterInternal (HttpServletRequest request, HttpServletResponse response, FilterChain
-        filterChain) throws ServletException, IOException {
-            baseJwtFilter.authenticateFromCookie(request, "at");
-            filterChain.doFilter(request, response);
-        }
-
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        baseJwtFilter.authenticateFromCookie(request, "rt");
+        filterChain.doFilter(request, response);
+    }
 }

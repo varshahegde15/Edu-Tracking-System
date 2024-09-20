@@ -3,6 +3,7 @@ package com.jsp.ets.security;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -24,17 +25,33 @@ public class SecurityConfig {
     private final JwtService jwtService;
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity)throws Exception{
+    @Order(1)
+    SecurityFilterChain refreshFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth->auth
-                        .requestMatchers("/register/**","/login","/users/verify")
+                .securityMatchers(matcher -> matcher.requestMatchers("/login/refresh"))
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest()
+                        .authenticated())
+                .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(new RefreshFilter(jwtService), UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
+
+    @Bean
+    @Order(2)
+    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        return httpSecurity.csrf(AbstractHttpConfigurer::disable)
+                .securityMatchers(matcher -> matcher.requestMatchers("/"))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/register/**", "/login", "/users/verify")
                         .permitAll()
                         .anyRequest()
                         .authenticated())
-                .sessionManagement(management->management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtFilter(jwtService), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
 
     @Bean
     PasswordEncoder passwordEncoder(){

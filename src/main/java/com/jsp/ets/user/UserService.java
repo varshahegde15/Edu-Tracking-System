@@ -219,6 +219,7 @@ public class UserService {
         return userMapper.mapToUserResponse(user);
     }
 
+
     public ResponseEntity<ResponseStructure<UserResponse>> login(@Valid LoginRequestDTO loginRequestDTO) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getPassword());
@@ -226,36 +227,46 @@ public class UserService {
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
 
         if (authentication.isAuthenticated()) {
-            return userRepo.findByEmail(loginRequestDTO.getEmail())
-                    .map(user -> {
-                        HttpHeaders httpHeaders = grantAccess(user);
-
-                        return ResponseEntity.ok()
-                                .headers(httpHeaders)
-                                .body(ResponseStructure.create(HttpStatus.OK.value(), "Cookies created", userMapper.mapToUserResponse(user)));
-                    })
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + loginRequestDTO.getEmail()));
+            return handleAuthenticatedUser(loginRequestDTO.getEmail(), true);
         } else {
             throw new BadCredentialsException("Invalid email or password");
         }
     }
 
+    public ResponseEntity<ResponseStructure<UserResponse>> refreshLogin() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        return handleAuthenticatedUser(email, false);
+    }
 
-    private HttpHeaders grantAccess(User user){
+    private ResponseEntity<ResponseStructure<UserResponse>> handleAuthenticatedUser(String email, boolean includeRefreshToken) {
+        return userRepo.findByEmail(email)
+                .map(user -> {
+                    HttpHeaders httpHeaders = grantAccess(user, includeRefreshToken);
+                    return ResponseEntity.ok()
+                            .headers(httpHeaders)
+                            .body(ResponseStructure.create(HttpStatus.OK.value(), "Cookies created", userMapper.mapToUserResponse(user)));
+                })
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+    }
 
+    private HttpHeaders grantAccess(User user, boolean includeRefreshToken) {
         String access_token = jwtService.generateAccessToken(user.getUserId(), user.getEmail(), user.getRole().name());
-        String refresh_token = jwtService.generateRefreshToken(user.getUserId(), user.getEmail(), user.getRole().name());
-
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.SET_COOKIE, generateCookie("rt", refresh_token, refresh_expiry*60));
-        headers.add(HttpHeaders.SET_COOKIE, generateCookie("at", access_token, access_expiry*60));
+
+        headers.add(HttpHeaders.SET_COOKIE, generateCookie("at", access_token, access_expiry * 60));
+
+        if (includeRefreshToken) {
+            String refresh_token = jwtService.generateRefreshToken(user.getUserId(), user.getEmail(), user.getRole().name());
+            headers.add(HttpHeaders.SET_COOKIE, generateCookie("rt", refresh_token, refresh_expiry * 60));
+        }
 
         return headers;
     }
 
 
-    private String generateCookie(String name, String value, long max_age){
-        return ResponseCookie.from(name,value)
+    private String generateCookie(String name, String value, long max_age) {
+        return ResponseCookie.from(name, value)
                 .domain("localhost")
                 .path("/")
                 .secure(false)
@@ -265,5 +276,7 @@ public class UserService {
                 .build()
                 .toString();
     }
+
+
 
 }
