@@ -13,8 +13,16 @@ import com.jsp.ets.user.request_dtos.*;
 import com.jsp.ets.utility.CacheHelper;
 import com.jsp.ets.utility.MailSenderService;
 import com.jsp.ets.utility.MessageModel;
+import com.jsp.ets.utility.ResponseStructure;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
+import org.apache.tomcat.util.http.parser.Cookie;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.reactive.HttpHandler;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,7 +43,6 @@ import com.jsp.ets.user.response_dtos.UserResponse;
 import lombok.AllArgsConstructor;
 
 @Service
-@AllArgsConstructor
 public class UserService {
 
     private final UserMapper userMapper;
@@ -44,8 +51,26 @@ public class UserService {
     private final MailSenderService mailSender;
     private final Random random;
     private final CacheHelper cacheHelper;
-    private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
+
+    public UserService(UserMapper userMapper, UserRepository userRepo, RatingRepository ratingRepo, MailSenderService mailSender, Random random, CacheHelper cacheHelper, JwtService jwtService, AuthenticationManager authenticationManager) {
+        this.userMapper = userMapper;
+        this.userRepo = userRepo;
+        this.ratingRepo = ratingRepo;
+        this.mailSender = mailSender;
+        this.random = random;
+        this.cacheHelper = cacheHelper;
+        this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
+    }
+
+    @Value("${my_app.jwt.access_expiry}")
+    private long access_expiry;
+
+    @Value("${my_app.jwt.refresh_expiry}")
+    private long refresh_expiry;
+
 
     public UserResponse registerUser(RegistrationRequestDTO registrationRequestDTO, UserRole role) throws MessagingException {
         User user = switch (role) {
@@ -194,17 +219,51 @@ public class UserService {
         return userMapper.mapToUserResponse(user);
     }
 
-    public String login(@Valid LoginRequestDTO loginRequestDTO) {
-        UsernamePasswordAuthenticationToken authenticationToken=new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(),loginRequestDTO.getPassword());
-        Authentication authentication=authenticationManager.authenticate(authenticationToken);
+    public ResponseEntity<ResponseStructure<UserResponse>> login(@Valid LoginRequestDTO loginRequestDTO) {
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getPassword());
+
+        Authentication authentication = authenticationManager.authenticate(authenticationToken);
+
         if (authentication.isAuthenticated()) {
             return userRepo.findByEmail(loginRequestDTO.getEmail())
                     .map(user -> {
-                        return jwtService.createJwt(user.getUserId(), user.getEmail(), user.getRole().name());
+                        HttpHeaders httpHeaders = grantAccess(user);
+
+                        return ResponseEntity.ok()
+                                .headers(httpHeaders)
+                                .body(ResponseStructure.create(HttpStatus.OK.value(), "Cookies created", userMapper.mapToUserResponse(user)));
                     })
                     .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + loginRequestDTO.getEmail()));
         } else {
             throw new BadCredentialsException("Invalid email or password");
         }
     }
+
+
+    private HttpHeaders grantAccess(User user){
+
+        String access_token = jwtService.generateAccessToken(user.getUserId(), user.getEmail(), user.getRole().name());
+        String refresh_token = jwtService.generateRefreshToken(user.getUserId(), user.getEmail(), user.getRole().name());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.SET_COOKIE, generateCookie("rt", refresh_token, refresh_expiry*60));
+        headers.add(HttpHeaders.SET_COOKIE, generateCookie("at", access_token, access_expiry*60));
+
+        return headers;
+    }
+
+
+    private String generateCookie(String name, String value, long max_age){
+        return ResponseCookie.from(name,value)
+                .domain("localhost")
+                .path("/")
+                .secure(false)
+                .httpOnly(true)
+                .sameSite("Lax")
+                .maxAge(max_age)
+                .build()
+                .toString();
+    }
+
 }

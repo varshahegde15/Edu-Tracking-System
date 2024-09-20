@@ -22,11 +22,23 @@ public class JwtService {
     @Value("${my_app.jwt.access_expiry}")
     private long access_expiry;
 
-    public String createJwt(String userId, String email,  String role){
+    @Value("${my_app.jwt.refresh_expiry}")
+    private long refresh_expiry;
+
+
+    public String generateAccessToken(String userId, String email,  String role){
+       return createJwt(userId,email,role,access_expiry);
+    }
+
+    public String generateRefreshToken(String userId, String email,  String role){
+        return createJwt(userId,email,role,refresh_expiry);
+    }
+
+    private String createJwt(String userId, String email,  String role, long expiry){
        return Jwts.builder()
                 .setClaims(Map.of("userId",userId,"email",email,"role",role))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+(access_expiry*60*1000)))
+                .setExpiration(new Date(System.currentTimeMillis()+(expiry*60*1000)))
                         .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -39,4 +51,6 @@ public class JwtService {
         JwtParser parser = Jwts.parserBuilder().setSigningKey(getKey()).build();
         return parser.parseClaimsJws(token).getBody();
     }
+
+
 }

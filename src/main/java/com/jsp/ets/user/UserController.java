@@ -1,6 +1,7 @@
 package com.jsp.ets.user;
 
 import com.jsp.ets.exception.InvalidStackException;
+import com.jsp.ets.security.UserDetailsServiceImpl;
 import com.jsp.ets.user.request_dtos.*;
 import com.jsp.ets.utility.ErrorStructure;
 import io.swagger.v3.oas.annotations.Operation;
@@ -212,7 +213,7 @@ public class UserController {
 					@ApiResponse(responseCode = "200", description = "Jwt token"),
 			})
 	@PostMapping("/login")
-	public String login(@RequestBody @Valid LoginRequestDTO loginRequestDTO){
+	public ResponseEntity<ResponseStructure<UserResponse>>  login(@RequestBody @Valid LoginRequestDTO loginRequestDTO){
 		return userService.login(loginRequestDTO);
 	}
 
