@@ -236,7 +236,10 @@ public class UserService {
     public ResponseEntity<ResponseStructure<UserResponse>> refreshLogin() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
+        if(email!=null)
         return handleAuthenticatedUser(email, false);
+        else
+            throw new UserNotFoundByIdException("User is not authenticated");
     }
 
     private ResponseEntity<ResponseStructure<UserResponse>> handleAuthenticatedUser(String email, boolean includeRefreshToken) {
