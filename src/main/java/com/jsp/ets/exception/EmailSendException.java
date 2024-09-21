@@ -3,7 +3,7 @@ package com.jsp.ets.exception;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class EmailSendException extends RuntimeException{
+public class EmailSendException extends RuntimeException {
 
     private final String message;
 

@@ -11,6 +11,6 @@ public class MessageModel {
 
     private String to;
     private Date sendDate;
-    private  String subject;
+    private String subject;
     private String text;
 }

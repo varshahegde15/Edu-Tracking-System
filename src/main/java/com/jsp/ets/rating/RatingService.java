@@ -1,19 +1,15 @@
 package com.jsp.ets.rating;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-
 import com.jsp.ets.exception.RatingNotFoundByIdException;
 import com.jsp.ets.exception.UserNotFoundByIdException;
 import com.jsp.ets.mapping.RatingMapper;
 import com.jsp.ets.user.Student;
-import com.jsp.ets.user.User;
 import com.jsp.ets.user.UserRepository;
-
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor

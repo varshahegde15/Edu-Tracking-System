@@ -4,17 +4,18 @@ import java.util.List;
 
 public enum Stack {
 
-	JAVA_FULL_STACK(List.of(Subject.CORE_JAVA, Subject.HIBERNATE, Subject.SQL, Subject.SPRING, Subject.SPRING_BOOT,
-			Subject.HTML, Subject.CSS, Subject.JAVASCRIPT, Subject.SERVLET)),
-	MERN_FULL_STACK(List.of(Subject.HTML, Subject.CSS, Subject.JAVASCRIPT, Subject.REACT_JS)), PYTHON_FULL_STACK(
-			List.of(Subject.PYTHON, Subject.SQL, Subject.HTML, Subject.CSS, Subject.JAVASCRIPT, Subject.DJANGO));
+    JAVA_FULL_STACK(List.of(Subject.CORE_JAVA, Subject.HIBERNATE, Subject.SQL, Subject.SPRING, Subject.SPRING_BOOT,
+            Subject.HTML, Subject.CSS, Subject.JAVASCRIPT, Subject.SERVLET)),
+    MERN_FULL_STACK(List.of(Subject.HTML, Subject.CSS, Subject.JAVASCRIPT, Subject.REACT_JS)), PYTHON_FULL_STACK(
+            List.of(Subject.PYTHON, Subject.SQL, Subject.HTML, Subject.CSS, Subject.JAVASCRIPT, Subject.DJANGO));
 
-	private List<Subject> subjects;
+    private List<Subject> subjects;
 
-	private Stack(List<Subject> subjects) {
-		this.subjects = subjects;
-	}
-	public List<Subject> getSubjects() {
-		return subjects;
-	}
+    private Stack(List<Subject> subjects) {
+        this.subjects = subjects;
+    }
+
+    public List<Subject> getSubjects() {
+        return subjects;
+    }
 }

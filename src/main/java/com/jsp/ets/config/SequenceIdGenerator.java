@@ -9,10 +9,10 @@ import org.hibernate.id.IdentifierGenerator;
 @SuppressWarnings("serial")
 public class SequenceIdGenerator implements IdentifierGenerator {
 
-	@Override
-	public Object generate(SharedSessionContractImplementor session, Object object) {
-		String uuid = UUID.randomUUID().toString();
-		return "EDU" + Year.now().toString() + uuid;
-	}
+    @Override
+    public Object generate(SharedSessionContractImplementor session, Object object) {
+        String uuid = UUID.randomUUID().toString();
+        return "EDU" + Year.now().toString() + uuid;
+    }
 
 }

@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class CacheHelper {
 
-    @CachePut(cacheNames ="non_verified_users", key = "#user.email")
-    public User userCache(User user){
+    @CachePut(cacheNames = "non_verified_users", key = "#user.email")
+    public User userCache(User user) {
         return user;
     }
 
-    @CachePut(cacheNames = "otps",key = "#email")
-    public Integer otpCache(Integer otp, String email){
+    @CachePut(cacheNames = "otps", key = "#email")
+    public Integer otpCache(Integer otp, String email) {
         return otp;
     }
 
