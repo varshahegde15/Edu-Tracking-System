@@ -16,21 +16,21 @@ import lombok.Setter;
 @Setter
 public class BatchRequestDTO {
 
-	@NotNull(message = "Title cannot be null")
-	@NotEmpty(message = "Title cannot be empty")
-	@Size(min = 3, max = 100, message = "Title must be between 3 and 100 characters")
-	private String title;
+    @NotNull(message = "Title cannot be null")
+    @NotEmpty(message = "Title cannot be empty")
+    @Size(min = 3, max = 100, message = "Title must be between 3 and 100 characters")
+    private String title;
 
-	@NotNull(message = "Subjects cannot be null")
-	@Size(min = 1, message = "There must be at least one subject")
-	private List<Subject> subjects;
+    @NotNull(message = "Subjects cannot be null")
+    @Size(min = 1, message = "There must be at least one subject")
+    private List<Subject> subjects;
 
-	@NotNull(message = "startingDate cannot be null")
-	private LocalDateTime startingDate;
+    @NotNull(message = "startingDate cannot be null")
+    private LocalDateTime startingDate;
 
-	@NotNull(message = "beginsAt cannot be null")
-	private LocalTime beginsAt;
+    @NotNull(message = "beginsAt cannot be null")
+    private LocalTime beginsAt;
 
-	@NotNull(message = "endsAt cannot be null")
-	private LocalTime endsAt;
+    @NotNull(message = "endsAt cannot be null")
+    private LocalTime endsAt;
 }

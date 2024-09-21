@@ -1,7 +1,6 @@
 package com.jsp.ets.rating;
 
 import com.jsp.ets.user.Subject;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,9 +8,9 @@ import lombok.Setter;
 @Setter
 public class RatingResponseDTO {
 
-	private String ratingId;
-	private Subject subject;
-	private int ratings;
-	private String feedback;
+    private String ratingId;
+    private Subject subject;
+    private int ratings;
+    private String feedback;
 
 }

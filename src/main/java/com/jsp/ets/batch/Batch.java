@@ -20,33 +20,32 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class)
 public class Batch {
 
-	@Id
-	@GenerateSequenceId
-	@Column(name = "batch_id")
-	private String batchId;
+    @Id
+    @GenerateSequenceId
+    @Column(name = "batch_id")
+    private String batchId;
 
-	@Column(name = "title")
-	private String title;
+    @Column(name = "title")
+    private String title;
 
-	private List<Subject> subjects;
+    private List<Subject> subjects;
 
-	@Column(name = "starting_date")
-	private LocalDateTime startingDate;
+    @Column(name = "starting_date")
+    private LocalDateTime startingDate;
 
-	@Column(name = "closed_date")
-	private LocalDateTime closedDate;
+    @Column(name = "closed_date")
+    private LocalDateTime closedDate;
 
-	@Column(name = "begins_at")
-	private LocalTime beginsAt;
+    @Column(name = "begins_at")
+    private LocalTime beginsAt;
 
-	@Column(name = "ends_at")
-	private LocalTime endsAt;
+    @Column(name = "ends_at")
+    private LocalTime endsAt;
 
-	@Column(name = "batch_status")
-	@Enumerated(EnumType.STRING)
-	private BatchStatus batchStatus;
+    @Column(name = "batch_status")
+    @Enumerated(EnumType.STRING)
+    private BatchStatus batchStatus;
 
-	@ManyToMany
-	private List<Student> students;
-
+    @ManyToMany
+    private List<Student> students;
 }

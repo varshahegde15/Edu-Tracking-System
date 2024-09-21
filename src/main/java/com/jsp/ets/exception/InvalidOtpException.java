@@ -3,7 +3,7 @@ package com.jsp.ets.exception;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class InvalidOtpException extends RuntimeException{
+public class InvalidOtpException extends RuntimeException {
 
     private final String message;
 

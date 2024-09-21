@@ -26,25 +26,25 @@ public class JwtService {
     private long refreshExpiry;
 
 
-    public String generateAccessToken(String userId, String email,  String role){
-       return createJwt(userId,email,role,accessExpiry);
+    public String generateAccessToken(String userId, String email, String role) {
+        return createJwt(userId, email, role, accessExpiry);
     }
 
-    public String generateRefreshToken(String userId, String email,  String role){
-        return createJwt(userId,email,role,refreshExpiry);
+    public String generateRefreshToken(String userId, String email, String role) {
+        return createJwt(userId, email, role, refreshExpiry);
     }
 
-    private String createJwt(String userId, String email,  String role, long expiry){
-       return Jwts.builder()
-                .setClaims(Map.of("userId",userId,"email",email,"role",role))
+    private String createJwt(String userId, String email, String role, long expiry) {
+        return Jwts.builder()
+                .setClaims(Map.of("userId", userId, "email", email, "role", role))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+(expiry*60*1000)))
-                        .signWith(getKey(), SignatureAlgorithm.HS256)
+                .setExpiration(new Date(System.currentTimeMillis() + (expiry * 60 * 1000)))
+                .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    private Key getKey(){
-       return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+    private Key getKey() {
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
     }
 
     public Claims parseJwt(String token) {

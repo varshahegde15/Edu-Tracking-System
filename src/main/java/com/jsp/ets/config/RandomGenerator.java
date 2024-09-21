@@ -10,7 +10,7 @@ import java.util.Random;
 public class RandomGenerator {
 
     @Bean
-    Random random(){
+    Random random() {
         return new SecureRandom();
     }
 }

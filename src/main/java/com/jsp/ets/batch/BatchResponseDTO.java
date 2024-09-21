@@ -14,11 +14,11 @@ import lombok.Setter;
 @Setter
 public class BatchResponseDTO {
 
-	private String batchId;
-	private String title;
-	private List<Subject> subjects;
-	private LocalDateTime startingDate;
-	private List<Student> students;
-	private LocalTime beginsAt;
-	private LocalTime endsAt;
+    private String batchId;
+    private String title;
+    private List<Subject> subjects;
+    private LocalDateTime startingDate;
+    private List<Student> students;
+    private LocalTime beginsAt;
+    private LocalTime endsAt;
 }

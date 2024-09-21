@@ -7,16 +7,16 @@ import lombok.Setter;
 @Setter
 public class ResponseStructure<T> {
 
-	private int status;
-	private String message;
-	private T data;
+    private int status;
+    private String message;
+    private T data;
 
-	public static <T> ResponseStructure<T> create(int status, String message, T data) {
-		ResponseStructure<T> structure = new ResponseStructure<>();
-		structure.setData(data);
-		structure.setMessage(message);
-		structure.setStatus(status);
+    public static <T> ResponseStructure<T> create(int status, String message, T data) {
+        ResponseStructure<T> structure = new ResponseStructure<>();
+        structure.setData(data);
+        structure.setMessage(message);
+        structure.setStatus(status);
 
-		return structure;
-	}
+        return structure;
+    }
 }

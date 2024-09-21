@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 import org.hibernate.annotations.IdGeneratorType;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.FIELD })
+@Target({ElementType.FIELD})
 @IdGeneratorType(value = SequenceIdGenerator.class)
 public @interface GenerateSequenceId {
 
