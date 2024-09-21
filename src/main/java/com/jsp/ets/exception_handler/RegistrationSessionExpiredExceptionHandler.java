@@ -1,6 +1,5 @@
 package com.jsp.ets.exception_handler;
 
-import com.jsp.ets.exception.InvalidStackException;
 import com.jsp.ets.exception.RegistrationSessionExpiredException;
 import com.jsp.ets.utility.CustomResponseBuilder;
 import com.jsp.ets.utility.ErrorStructure;

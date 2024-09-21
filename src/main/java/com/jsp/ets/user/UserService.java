@@ -1,46 +1,39 @@
 package com.jsp.ets.user;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-import java.util.stream.Collectors;
-
 import com.jsp.ets.exception.InvalidOtpException;
+import com.jsp.ets.exception.InvalidStackException;
 import com.jsp.ets.exception.RegistrationSessionExpiredException;
+import com.jsp.ets.exception.UserNotFoundByIdException;
+import com.jsp.ets.mapping.UserMapper;
+import com.jsp.ets.rating.Rating;
+import com.jsp.ets.rating.RatingRepository;
 import com.jsp.ets.security.JwtService;
 import com.jsp.ets.user.request_dtos.*;
+import com.jsp.ets.user.response_dtos.StudentResponseDTO;
+import com.jsp.ets.user.response_dtos.UserResponse;
 import com.jsp.ets.utility.CacheHelper;
 import com.jsp.ets.utility.MailSenderService;
 import com.jsp.ets.utility.MessageModel;
 import com.jsp.ets.utility.ResponseStructure;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
-import org.apache.tomcat.util.http.parser.Cookie;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.server.reactive.HttpHandler;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.jsp.ets.exception.InvalidStackException;
-import com.jsp.ets.exception.UserNotFoundByIdException;
-import com.jsp.ets.mapping.UserMapper;
-import com.jsp.ets.rating.Rating;
-import com.jsp.ets.rating.RatingRepository;
-import com.jsp.ets.user.response_dtos.StudentResponseDTO;
-import com.jsp.ets.user.response_dtos.UserResponse;
-
-import lombok.AllArgsConstructor;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class UserService {
@@ -66,10 +59,10 @@ public class UserService {
     }
 
     @Value("${my_app.jwt.access_expiry}")
-    private long access_expiry;
+    private long accessExpiry;
 
     @Value("${my_app.jwt.refresh_expiry}")
-    private long refresh_expiry;
+    private long refreshExpiry;
 
 
     public UserResponse registerUser(RegistrationRequestDTO registrationRequestDTO, UserRole role) throws MessagingException {
@@ -236,11 +229,14 @@ public class UserService {
     public ResponseEntity<ResponseStructure<UserResponse>> refreshLogin() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        if(email!=null)
-        return handleAuthenticatedUser(email, false);
-        else
+
+        if (email != null) {
+            return handleAuthenticatedUser(email, false);
+        } else {
             throw new UserNotFoundByIdException("User is not authenticated");
+        }
     }
+
 
     private ResponseEntity<ResponseStructure<UserResponse>> handleAuthenticatedUser(String email, boolean includeRefreshToken) {
         return userRepo.findByEmail(email)
@@ -257,25 +253,25 @@ public class UserService {
         String access_token = jwtService.generateAccessToken(user.getUserId(), user.getEmail(), user.getRole().name());
         HttpHeaders headers = new HttpHeaders();
 
-        headers.add(HttpHeaders.SET_COOKIE, generateCookie("at", access_token, access_expiry * 60));
+        headers.add(HttpHeaders.SET_COOKIE, generateCookie("at", access_token, accessExpiry * 60));
 
         if (includeRefreshToken) {
             String refresh_token = jwtService.generateRefreshToken(user.getUserId(), user.getEmail(), user.getRole().name());
-            headers.add(HttpHeaders.SET_COOKIE, generateCookie("rt", refresh_token, refresh_expiry * 60));
+            headers.add(HttpHeaders.SET_COOKIE, generateCookie("rt", refresh_token, refreshExpiry * 60));
         }
 
         return headers;
     }
 
 
-    private String generateCookie(String name, String value, long max_age) {
+    private String generateCookie(String name, String value, long maxAge) {
         return ResponseCookie.from(name, value)
                 .domain("localhost")
                 .path("/")
                 .secure(false)
                 .httpOnly(true)
                 .sameSite("Lax")
-                .maxAge(max_age)
+                .maxAge(maxAge)
                 .build()
                 .toString();
     }

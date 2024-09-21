@@ -1,9 +1,5 @@
 package com.jsp.ets.utility;
 
-import com.jsp.ets.batch.Batch;
-import com.jsp.ets.exception.InvalidOtpException;
-import com.jsp.ets.exception.RegistrationSessionExpiredException;
-import com.jsp.ets.rating.Rating;
 import com.jsp.ets.user.User;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;

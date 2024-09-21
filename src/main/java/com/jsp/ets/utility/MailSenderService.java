@@ -1,5 +1,6 @@
 package com.jsp.ets.utility;
 
+import com.jsp.ets.exception.EmailSendException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
@@ -20,27 +21,26 @@ public class MailSenderService {
     @Async
     public void sendMail(MessageModel messageModel) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper helper = null;
 
         try {
-            helper = new MimeMessageHelper(mimeMessage, true);
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setTo(messageModel.getTo());
             helper.setText(messageModel.getText(), true);
             helper.setSubject(messageModel.getSubject());
             helper.setSentDate(messageModel.getSendDate());
 
-            // Log the email details
             logger.info("Sending email to: {}", messageModel.getTo());
             logger.info("Subject: {}", messageModel.getSubject());
             logger.info("Sent date: {}", messageModel.getSendDate());
 
         } catch (MessagingException e) {
-            logger.error("Error sending email", e);
-            throw new RuntimeException(e);
+            logger.error("Error sending email to: {}, subject: {}", messageModel.getTo(), messageModel.getSubject(), e);
+            throw new EmailSendException("Failed to send email to " + messageModel.getTo() + " with subject: " + messageModel.getSubject());
         }
 
         mailSender.send(mimeMessage);
         logger.info("Email successfully sent to: {}", messageModel.getTo());
     }
+
 
 }

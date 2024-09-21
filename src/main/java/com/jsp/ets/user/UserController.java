@@ -1,33 +1,24 @@
 package com.jsp.ets.user;
 
 import com.jsp.ets.exception.InvalidStackException;
-import com.jsp.ets.security.UserDetailsServiceImpl;
 import com.jsp.ets.user.request_dtos.*;
+import com.jsp.ets.user.response_dtos.StudentResponseDTO;
+import com.jsp.ets.user.response_dtos.TrainerResponseDTO;
+import com.jsp.ets.user.response_dtos.UserResponse;
+import com.jsp.ets.utility.CustomResponseBuilder;
 import com.jsp.ets.utility.ErrorStructure;
+import com.jsp.ets.utility.ResponseStructure;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.jsp.ets.user.response_dtos.StudentResponseDTO;
-import com.jsp.ets.user.response_dtos.TrainerResponseDTO;
-import com.jsp.ets.user.response_dtos.UserResponse;
-import com.jsp.ets.utility.CustomResponseBuilder;
-import com.jsp.ets.utility.ResponseStructure;
-
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
@@ -36,6 +27,8 @@ public class UserController {
 
 	private UserService userService;
 	private CustomResponseBuilder responseBuilder;
+
+	private static final String VERIFY_EMAIL_MESSAGE = "Accepted the details, verify your email by submitting the otp";
 
 
 
@@ -50,7 +43,7 @@ public class UserController {
 	public ResponseEntity<ResponseStructure<UserResponse>> registerAdmin(
 			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) throws MessagingException {
 		UserResponse response = userService.registerUser(registrationRequestDTO, UserRole.ADMIN);
-		return responseBuilder.success(HttpStatus.ACCEPTED, "Accepted the details, verify your email by submitting the otp", response);
+		return responseBuilder.success(HttpStatus.ACCEPTED, VERIFY_EMAIL_MESSAGE, response);
 	}
 
 
@@ -68,7 +61,7 @@ public class UserController {
 	public ResponseEntity<ResponseStructure<UserResponse>> registerHR(
 			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) throws MessagingException {
 		UserResponse response = userService.registerUser(registrationRequestDTO, UserRole.HR);
-		return responseBuilder.success(HttpStatus.ACCEPTED, "Accepted the details, verify your email by submitting the otp", response);
+		return responseBuilder.success(HttpStatus.ACCEPTED, VERIFY_EMAIL_MESSAGE, response);
 	}
 
 
@@ -86,7 +79,7 @@ public class UserController {
 	public ResponseEntity<ResponseStructure<UserResponse>> registerTrainer(
 			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) throws MessagingException {
 		UserResponse response = userService.registerUser(registrationRequestDTO, UserRole.TRAINER);
-		return responseBuilder.success(HttpStatus.ACCEPTED, "Accepted the details, verify your email by submitting the otp", response);
+		return responseBuilder.success(HttpStatus.ACCEPTED, VERIFY_EMAIL_MESSAGE, response);
 	}
 
 
@@ -104,7 +97,7 @@ public class UserController {
 	public ResponseEntity<ResponseStructure<UserResponse>> registerStudent(
 			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) throws MessagingException {
 		UserResponse response = userService.registerUser(registrationRequestDTO, UserRole.STUDENT);
-		return responseBuilder.success(HttpStatus.ACCEPTED, "Accepted the details, verify your email by submitting the otp", response);
+		return responseBuilder.success(HttpStatus.ACCEPTED, VERIFY_EMAIL_MESSAGE, response);
 	}
 
 
