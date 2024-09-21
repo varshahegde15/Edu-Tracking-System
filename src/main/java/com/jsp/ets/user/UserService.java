@@ -250,14 +250,14 @@ public class UserService {
     }
 
     private HttpHeaders grantAccess(User user, boolean includeRefreshToken) {
-        String access_token = jwtService.generateAccessToken(user.getUserId(), user.getEmail(), user.getRole().name());
+        String accessToken = jwtService.generateAccessToken(user.getUserId(), user.getEmail(), user.getRole().name());
         HttpHeaders headers = new HttpHeaders();
 
-        headers.add(HttpHeaders.SET_COOKIE, generateCookie("at", access_token, accessExpiry * 60));
+        headers.add(HttpHeaders.SET_COOKIE, generateCookie("at", accessToken, accessExpiry * 60));
 
         if (includeRefreshToken) {
-            String refresh_token = jwtService.generateRefreshToken(user.getUserId(), user.getEmail(), user.getRole().name());
-            headers.add(HttpHeaders.SET_COOKIE, generateCookie("rt", refresh_token, refreshExpiry * 60));
+            String refreshToken = jwtService.generateRefreshToken(user.getUserId(), user.getEmail(), user.getRole().name());
+            headers.add(HttpHeaders.SET_COOKIE, generateCookie("rt", refreshToken, refreshExpiry * 60));
         }
 
         return headers;
