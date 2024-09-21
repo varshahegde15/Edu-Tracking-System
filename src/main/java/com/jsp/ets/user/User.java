@@ -1,5 +1,6 @@
 package com.jsp.ets.user;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -26,7 +27,7 @@ import lombok.Setter;
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
 @EntityListeners(AuditingEntityListener.class)
-public class User {
+public class User implements Serializable {
 
 	@Id
 	@GenerateSequenceId

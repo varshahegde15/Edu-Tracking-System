@@ -2,6 +2,7 @@ package com.jsp.ets.batch;
 
 import java.util.Optional;
 
+import com.jsp.ets.utility.CacheHelper;
 import org.springframework.stereotype.Service;
 
 import com.jsp.ets.exception.BatchNotFoundByIdException;
@@ -16,6 +17,7 @@ public class BatchService {
 
     private final BatchRepository batchRepo;
     private final BatchMapper batchMapper;
+    private final CacheHelper cacheHelper;
 
     public BatchResponseDTO saveBatch(BatchRequestDTO batchRequestDTO) {
         return Optional.ofNullable(batchRequestDTO)
